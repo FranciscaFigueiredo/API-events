@@ -6,6 +6,15 @@ async function findEvents() {
     return events;
 }
 
+async function findEventDescription(id: number) {
+    const description = await prisma.event.findFirst({
+        where: { id },
+    });
+
+    return description;
+}
+
 export {
     findEvents,
+    findEventDescription,
 };
