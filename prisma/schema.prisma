@@ -19,6 +19,8 @@ model User {
     createdAt       DateTime     @default(now())        @map("created_at")
     updatedAt       DateTime     @default(now())        @map("updated_at")
 
+    Event           Event[]
+
     @@map("users")
 }
 
@@ -30,11 +32,13 @@ model Event {
     startTime       DateTime     @map("time")
     endTime         DateTime     @map("end_time")
     coverPhoto      String       @db.VarChar(255)       @map("cover_photo")
-    description     String
-    link            String 
+    description     String       @db.VarChar(255)
+    link            String       @db.VarChar(255)
 
     createdAt       DateTime     @default(now())        @map("created_at")
     updatedAt       DateTime     @default(now())        @map("updated_at")
+
+    User            User[]
 
     @@map("events")
 }
