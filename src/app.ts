@@ -4,7 +4,7 @@ import cors from 'cors';
 
 import session from 'express-session';
 import passport from 'passport';
-import GoogleStrategy from './config/passport';
+import GoogleStrategy, { FacebookStrategy } from './config/passport';
 
 import serverMiddlewareError from './middlewares/serverMiddlewareError';
 import router from './routers';
@@ -23,6 +23,7 @@ app.use(session({
 app.use(passport.authenticate('session'));
 
 passport.use(GoogleStrategy);
+passport.use(FacebookStrategy);
 
 app.use(router);
 

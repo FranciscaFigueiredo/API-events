@@ -4,13 +4,26 @@ import passport from 'passport';
 const router = Router();
 
 router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'phone', 'profile'] }));
+
+router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+// router.get('/auth/facebook', passport.authenticate('facebook', {
+//     scope: ['email', 'user_location'],
+// }));
+
 router.get(
-    '/auth/example/callback',
+    '/auth/redirect/google',
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
         // Successful authentication, redirect home.
-        // res.send('logado com sucesso');
-        res.redirect('/');
+        res.sendStatus(201);
+    },
+);
+
+router.get(
+    '/auth/redirect/facebook',
+    passport.authenticate('facebook', { failureRedirect: '/login', failureMessage: true }),
+    (req, res) => {
+        res.sendStatus(201);
     },
 );
 
