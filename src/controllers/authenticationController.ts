@@ -1,19 +1,25 @@
-import { Request, Response } from 'express';
-import { UserSignUpData } from '../interfaces/User';
-
 import * as authenticationService from '../services/authenticationService';
 
-async function postAuthentication(req: Request, res: Response) {
-    const {
-        name,
+async function authUser(
+    email: string,
+    name: string,
+    phone: string,
+    googleId: string | null,
+    facebookId: string | null,
+    accessToken: string,
+    refreshToken: string,
+) {
+    console.log({ refreshToken, accessToken });
+
+    await authenticationService.authUser(
         email,
+        name,
         phone,
-    } = req.body as UserSignUpData;
-
-    await authenticationService.postNewUserSignUp({ name, email, phone });
-
-    return res.sendStatus(201);
+        googleId,
+        facebookId,
+    );
 }
+
 export {
-    postAuthentication,
+    authUser,
 };

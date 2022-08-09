@@ -16,6 +16,9 @@ model User {
     email           String       @unique                @db.VarChar(255)
     phone           String       @db.VarChar(11)
 
+    googleId        String?      @unique                @map("google_id")
+    facebookId      String?      @unique                @map("facebook_id")
+
     createdAt       DateTime     @default(now())        @map("created_at")
     updatedAt       DateTime     @default(now())        @map("updated_at")
 

@@ -1,13 +1,21 @@
 import * as authenticationRepository from '../repositories/authenticationRepository';
 
-import { UserSignUpData } from '../interfaces/User';
-
-async function postNewUserSignUp({ name, email, phone }: UserSignUpData) {
-    const userData = await authenticationRepository.create({ name, email, phone });
-
-    return userData;
+async function authUser(
+    email: string,
+    name: string,
+    phone: string,
+    googleId: string | null,
+    facebookId: string | null,
+) {
+    await authenticationRepository.upsert({
+        email,
+        name,
+        phone,
+        googleId,
+        facebookId,
+    });
 }
 
 export {
-    postNewUserSignUp,
+    authUser,
 };
