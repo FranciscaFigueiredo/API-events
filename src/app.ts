@@ -4,7 +4,7 @@ import cors from 'cors';
 
 import session from 'express-session';
 import passport from 'passport';
-import GoogleStrategy, { FacebookStrategy } from './config/passport';
+import { FacebookStrategy, GoogleStrategy } from './config/passport';
 
 import serverMiddlewareError from './middlewares/serverMiddlewareError';
 import router from './routers';

@@ -1,10 +1,3 @@
-// import { User } from '@prisma/client';
+import { User } from '@prisma/client';
 
-export type UserSignUpData = {
-    name: string;
-    email: string;
-    phone: string;
-    googleId?: string;
-    facebookId?: string;
-}
-//  Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
+export type UserSignUpData = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;

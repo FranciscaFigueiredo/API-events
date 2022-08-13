@@ -16,7 +16,34 @@ async function getEventDescription(req: Request, res: Response) {
     return res.status(200).send(description);
 }
 
+async function postEventData(req: Request, res: Response) {
+    const {
+        name,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+        coverPhoto,
+        description,
+        link,
+    } = req.body;
+
+    const eventCreated = await eventService.insertEventData({
+        name,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+        coverPhoto,
+        description,
+        link,
+    });
+
+    return res.status(201).send(eventCreated);
+}
+
 export {
     getEventsList,
     getEventDescription,
+    postEventData,
 };

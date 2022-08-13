@@ -1,8 +1,8 @@
-import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
-import Strategy from 'passport-facebook';
+import { Strategy as Google } from 'passport-google-oauth2';
+import { Strategy as Facebook } from 'passport-facebook';
 import * as authenticationController from '../controllers/authenticationController';
 
-export default new GoogleStrategy(
+export const GoogleStrategy = new Google(
     {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -16,29 +16,28 @@ export default new GoogleStrategy(
         profile: {
             email: string;
             displayName: string;
+            phone?: string;
             provider: string;
             id: string;
         },
         // eslint-disable-next-line no-unused-vars
         done: (arg0: void) => any,
     ) => {
-        console.log(request.query);
-
         const user = await authenticationController.authUser(
             profile.email,
             profile.displayName,
-            '99999999999',
+            profile?.phone,
             profile.provider === 'google' ? profile.id : null,
             null,
             accessToken,
             refreshToken,
         );
-        console.log({ profile, user });
+
         return user;
     }),
 );
 
-export const FacebookStrategy = new Strategy.Strategy(
+export const FacebookStrategy = new Facebook(
     {
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
@@ -47,13 +46,6 @@ export const FacebookStrategy = new Strategy.Strategy(
         passReqToCallback: true,
         profileFields: ['id', 'displayName', 'photos', 'email'],
     },
-
-    // (request, accessToken, refreshToken, profile, cb) => {
-    //     // console.log(request);
-
-    //     console.log(profile, (err: any, user: any) => cb(err, user));
-    //     return true;
-    // },
     (async (
         request,
         accessToken: string,
@@ -61,8 +53,6 @@ export const FacebookStrategy = new Strategy.Strategy(
         profile: any,
         cb: any,
     ) => {
-        console.log(profile);
-
         const user = await authenticationController.authUser(
             profile.emails[0].value,
             profile.displayName,

@@ -16,26 +16,6 @@ async function authUser(
         googleId: googleId || searchEmailRegistered.googleId,
         facebookId: facebookId || searchEmailRegistered.facebookId,
     });
-    console.log({
-        email,
-        name,
-        phone,
-        googleId,
-        facebookId,
-    });
-    // }
-
-    // const isGoogleRegistered = googleAlreadyRegistered(searchEmailRegistered, googleId);
-
-    // if (isGoogleRegistered && googleId) {
-    //     return searchEmailRegistered;
-    // }
-
-    // const isFacebookRegistered = facebookAlreadyRegistered(searchEmailRegistered, facebookId);
-
-    // if (isFacebookRegistered && facebookId) {
-    //     return
-    // }
 }
 
 export {
