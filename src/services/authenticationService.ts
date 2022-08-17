@@ -6,6 +6,7 @@ async function authUser(
     phone: string,
     googleId: string | null,
     facebookId: string | null,
+    accessToken: string,
 ) {
     const searchEmailRegistered = await authenticationRepository.findRegisteredEmail(email);
 
@@ -14,7 +15,9 @@ async function authUser(
         name,
         phone,
         googleId: googleId || searchEmailRegistered.googleId,
+        googleToken: googleId ? accessToken : null,
         facebookId: facebookId || searchEmailRegistered.facebookId,
+        facebookToken: facebookId ? accessToken : null,
     });
 }
 

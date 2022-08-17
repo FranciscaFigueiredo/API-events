@@ -17,7 +17,9 @@ model User {
     phone           String?      @db.VarChar(11)
 
     googleId        String?      @unique                @map("google_id")
+    googleToken     String?      @unique                @map("google_token")
     facebookId      String?      @unique                @map("facebook_id")
+    facebookToken   String?      @unique                @map("facebook_token")
 
     createdAt       DateTime     @default(now())        @map("created_at")
     updatedAt       DateTime     @default(now())        @map("updated_at")

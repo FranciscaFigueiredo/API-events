@@ -17,7 +17,6 @@ describe('POST /events', () => {
 
         const createdEvent = await server.post('/events').send(eventData);
 
-        console.log(createdEvent.text);
         const event = await prisma.event.findFirst({
             where: {
                 name: eventData.name,

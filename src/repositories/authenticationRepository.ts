@@ -7,7 +7,9 @@ async function upsert(userDataUpsertObject: UserSignUpData) {
         name,
         phone,
         facebookId,
+        facebookToken,
         googleId,
+        googleToken,
     } = userDataUpsertObject;
 
     const user = await prisma.user.upsert({
@@ -18,7 +20,9 @@ async function upsert(userDataUpsertObject: UserSignUpData) {
             name,
             phone,
             facebookId,
+            facebookToken,
             googleId,
+            googleToken,
         },
         create: {
             ...userDataUpsertObject,

@@ -17,6 +17,7 @@ async function authUser(
         phone,
         googleId,
         facebookId,
+        accessToken,
     );
 }
 
