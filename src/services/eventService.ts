@@ -4,6 +4,7 @@ import ConflictError from '../errors/ConflictError';
 import NotFoundError from '../errors/NotFoundError';
 import { EventInsertData } from '../interfaces/Event';
 import * as eventRepository from '../repositories/eventRepository';
+import { verifyInvalidDate, verifyInvalidTime } from '../utils/eventUtil';
 
 async function findEvents(): Promise<Event[]> {
     const events = await eventRepository.findEvents();
@@ -36,6 +37,9 @@ async function insertEventData({
     if (searchEvent) {
         throw new ConflictError('Event name already exists');
     }
+
+    await verifyInvalidDate(startDate, endDate);
+    await verifyInvalidTime(startDate, endDate, startTime, endTime);
 
     const cleanedName = DOMPurify.sanitize(name);
     const cleanedDescription = DOMPurify.sanitize(description);
