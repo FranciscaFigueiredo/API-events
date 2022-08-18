@@ -132,4 +132,5 @@ export {
     insertEventData,
     updateEventData,
     deleteEventById,
+    searchEventById,
 };

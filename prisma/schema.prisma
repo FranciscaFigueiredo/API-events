@@ -25,6 +25,7 @@ model User {
     updatedAt       DateTime     @default(now())        @map("updated_at")
 
     Event           Event[]
+    Subscription    Subscription[]
 
     @@map("users")
 }
@@ -44,6 +45,21 @@ model Event {
     updatedAt       DateTime     @default(now())        @map("updated_at")
 
     User            User[]
+    Subscription    Subscription[]
 
     @@map("events")
+}
+
+model Subscription {
+    id              Int          @id                    @default(autoincrement())
+    userId          Int          @map("user_id")
+    User            User         @relation(fields: [userId], references: [id])
+    
+    eventId         Int          @map("event_id")
+    Event           Event        @relation(fields: [eventId], references: [id])
+
+    createdAt       DateTime     @default(now())        @map("created_at")
+    updatedAt       DateTime     @default(now())        @map("updated_at")
+
+    @@map("subscriptions")
 }
