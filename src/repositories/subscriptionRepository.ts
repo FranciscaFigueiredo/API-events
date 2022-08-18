@@ -28,7 +28,25 @@ async function findSubscriptionAlreadyMade(userId: number, eventId: number) {
     return subscription;
 }
 
+async function findUserSubscriptions(userId: number) {
+    const subscriptions = await prisma.subscription.findMany({
+        where: {
+            userId,
+        },
+        orderBy: [
+            {
+                Event: {
+                    startDate: 'desc',
+                },
+            },
+        ],
+    });
+
+    return subscriptions;
+}
+
 export {
     create,
     findSubscriptionAlreadyMade,
+    findUserSubscriptions,
 };

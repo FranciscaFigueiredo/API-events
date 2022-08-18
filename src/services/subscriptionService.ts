@@ -17,6 +17,13 @@ async function createSubscription(userId: number, eventId: number) {
     return events;
 }
 
+async function findUserSubscriptions(userId: number) {
+    const subscriptions = await subscriptionRepository.findUserSubscriptions(userId);
+
+    return subscriptions;
+}
+
 export {
     createSubscription,
+    findUserSubscriptions,
 };
