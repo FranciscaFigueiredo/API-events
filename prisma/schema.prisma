@@ -14,15 +14,18 @@ model User {
     id              Int          @id                    @default(autoincrement())
     name            String       @db.VarChar(255)
     email           String       @unique                @db.VarChar(255)
-    phone           String       @db.VarChar(11)
+    phone           String?      @db.VarChar(11)
 
     googleId        String?      @unique                @map("google_id")
+    googleToken     String?      @unique                @map("google_token")
     facebookId      String?      @unique                @map("facebook_id")
+    facebookToken   String?      @unique                @map("facebook_token")
 
     createdAt       DateTime     @default(now())        @map("created_at")
     updatedAt       DateTime     @default(now())        @map("updated_at")
 
     Event           Event[]
+    Subscription    Subscription[]
 
     @@map("users")
 }
@@ -32,16 +35,31 @@ model Event {
     name            String       @db.VarChar(255)
     startDate       DateTime     @map("start_date")
     endDate         DateTime     @map("end_date")
-    startTime       DateTime     @map("time")
-    endTime         DateTime     @map("end_time")
+    startTime       String       @map("start_time")
+    endTime         String       @map("end_time")
     coverPhoto      String       @db.VarChar(255)       @map("cover_photo")
-    description     String       @db.VarChar(255)
+    description     String
     link            String       @db.VarChar(255)
 
     createdAt       DateTime     @default(now())        @map("created_at")
     updatedAt       DateTime     @default(now())        @map("updated_at")
 
     User            User[]
+    Subscription    Subscription[]
 
     @@map("events")
+}
+
+model Subscription {
+    id              Int          @id                    @default(autoincrement())
+    userId          Int          @map("user_id")
+    User            User         @relation(fields: [userId], references: [id])
+    
+    eventId         Int          @map("event_id")
+    Event           Event        @relation(fields: [eventId], references: [id])
+
+    createdAt       DateTime     @default(now())        @map("created_at")
+    updatedAt       DateTime     @default(now())        @map("updated_at")
+
+    @@map("subscriptions")
 }

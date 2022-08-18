@@ -4,7 +4,7 @@ import cors from 'cors';
 
 import session from 'express-session';
 import passport from 'passport';
-import GoogleStrategy, { FacebookStrategy } from './config/passport';
+import { FacebookStrategy, GoogleStrategy } from './config/passport';
 
 import serverMiddlewareError from './middlewares/serverMiddlewareError';
 import router from './routers';
@@ -12,7 +12,11 @@ import router from './routers';
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({
+    limit: '50mb',
+    extended: true,
+}));
 
 app.use(session({
     secret: 'keyboard cat',

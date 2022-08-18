@@ -1,16 +1,16 @@
 import { prisma } from '../config/database';
 import { UserSignUpData } from '../interfaces/User';
 
-async function upsert(objectUpsertUserData: UserSignUpData) {
+async function upsert(userDataUpsertObject: UserSignUpData) {
     const {
         email,
         name,
         phone,
         facebookId,
+        facebookToken,
         googleId,
-    } = objectUpsertUserData;
-
-    console.log({ objectUpsertUserData });
+        googleToken,
+    } = userDataUpsertObject;
 
     const user = await prisma.user.upsert({
         where: {
@@ -20,10 +20,12 @@ async function upsert(objectUpsertUserData: UserSignUpData) {
             name,
             phone,
             facebookId,
+            facebookToken,
             googleId,
+            googleToken,
         },
         create: {
-            ...objectUpsertUserData,
+            ...userDataUpsertObject,
         },
     });
 
