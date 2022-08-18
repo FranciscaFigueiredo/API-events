@@ -59,9 +59,22 @@ async function patchEventData(req: Request, res: Response) {
     return res.status(200).send(eventCreated);
 }
 
+async function deleteEventData(req: Request, res: Response) {
+    const { userId } = res.locals.user;
+    const { id } = req.params;
+
+    await eventService.deleteEventById(
+        Number(userId),
+        Number(id),
+    );
+
+    return res.sendStatus(204);
+}
+
 export {
     getEventsList,
     getEventDescription,
     postEventData,
     patchEventData,
+    deleteEventData,
 };

@@ -26,4 +26,10 @@ router.patch(
     eventController.patchEventData,
 );
 
+router.delete(
+    '/events/:id/delete',
+    auth,
+    eventController.deleteEventData,
+);
+
 export default router;

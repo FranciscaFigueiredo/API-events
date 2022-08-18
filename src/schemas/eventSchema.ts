@@ -15,7 +15,7 @@ export const createEventSchema = joi.object<EventInsertData>({
         .pattern(/https?:\/\/res.cloudinary.com.*.(?:png|jpg)/)
         .required(),
     description: joi.string().required(),
-    link: joi.string().uri().required,
+    link: joi.string().uri().required(),
 });
 
 export const updateEventSchema = joi.object<EventInsertData>({

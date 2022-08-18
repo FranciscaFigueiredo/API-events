@@ -116,9 +116,20 @@ async function updateEventData(updateObject: EventInsertData, userId: number, ev
     return event;
 }
 
+async function deleteEventById(userId: number, eventId: number) {
+    await verifyAuthorization(userId, eventId);
+
+    await searchEventById(eventId);
+
+    await eventRepository.deleteEvent(eventId);
+
+    return true;
+}
+
 export {
     findEvents,
     findEventDescription,
     insertEventData,
     updateEventData,
+    deleteEventById,
 };

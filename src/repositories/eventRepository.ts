@@ -67,7 +67,13 @@ async function create(
             },
         },
         include: {
-            User: true,
+            User: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                },
+            },
         },
     });
 
@@ -83,6 +89,14 @@ async function update(eventDataUpdateObject: EventUpdateData, id: number) {
     return updatedEvent;
 }
 
+async function deleteEvent(eventId: number) {
+    const updatedEvent = await prisma.event.delete({
+        where: { id: eventId },
+    });
+
+    return updatedEvent;
+}
+
 export {
     findEvents,
     findEventDescription,
@@ -90,4 +104,5 @@ export {
     findEventById,
     create,
     update,
+    deleteEvent,
 };
