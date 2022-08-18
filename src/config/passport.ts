@@ -30,7 +30,6 @@ export const GoogleStrategy = new Google(
             profile.provider === 'google' ? profile.id : null,
             null,
             accessToken,
-            refreshToken,
         );
 
         return user;
@@ -56,13 +55,13 @@ export const FacebookStrategy = new Facebook(
         const user = await authenticationController.authUser(
             profile.emails[0].value,
             profile.displayName,
-            '99999999999',
+            profile?.phone,
             null,
             profile.provider === 'facebook' ? profile.id : null,
             accessToken,
-            refreshToken,
         );
-        console.log(profile, (err: any) => cb(err, user));
+        // eslint-disable-next-line no-unused-expressions
+        (err: any) => cb(err, user);
         return user;
     }),
 );

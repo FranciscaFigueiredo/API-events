@@ -8,12 +8,12 @@ async function createValidEventBody(): Promise<EventInsertData> {
     const end = dayjs(start).add(2, 'hour').format('YYYY-MM-DD HH:mm:ss');
 
     const body = {
-        name: faker.lorem.sentence(),
+        name: faker.lorem.word(),
         startDate: faker.date.soon(10),
         endDate: faker.date.soon(12),
         startTime: start.split(' ')[1],
         endTime: end.split(' ')[1],
-        coverPhoto: faker.internet.avatar(),
+        coverPhoto: 'https://res.cloudinary.com/francisca-dev/image/upload/v1660717474/events_api/yj3nral46ib4uzrshnpz.jpg',
         description: `
             # API - Events
     

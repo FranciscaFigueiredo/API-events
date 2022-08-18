@@ -17,6 +17,8 @@ async function getEventDescription(req: Request, res: Response) {
 }
 
 async function postEventData(req: Request, res: Response) {
+    const { userId } = res.locals.user;
+
     const {
         name,
         startDate,
@@ -37,7 +39,7 @@ async function postEventData(req: Request, res: Response) {
         coverPhoto,
         description,
         link,
-    });
+    }, Number(userId));
 
     return res.status(201).send(eventCreated);
 }
