@@ -1,13 +1,18 @@
 import { Event } from '@prisma/client';
-import DOMPurify from 'dompurify';
+
 import ConflictError from '../errors/ConflictError';
 import NotFoundError from '../errors/NotFoundError';
-import { EventInsertData } from '../interfaces/Event';
-import * as eventRepository from '../repositories/eventRepository';
-import { verifyInvalidDate, verifyInvalidTime } from '../utils/eventUtil';
+import UnauthorizedError from '../errors/UnauthorizedError';
 
-async function findEvents(): Promise<Event[]> {
-    const events = await eventRepository.findEvents();
+import { EventInsertData } from '../interfaces/Event';
+
+import * as eventRepository from '../repositories/eventRepository';
+import * as userRepository from '../repositories/userRepository';
+
+import { cleaningBody, verifyDateTime } from '../utils/eventUtil';
+
+async function findEvents(time: string): Promise<Event[]> {
+    const events = await eventRepository.findEvents(time);
 
     return events;
 }
@@ -22,6 +27,14 @@ async function findEventDescription(id: number): Promise<Event> {
     return description;
 }
 
+async function searchEventNameAlreadyExists(name: string, eventId: number) {
+    const searchEvent = await eventRepository.findEventByName(name);
+
+    if (searchEvent && eventId !== searchEvent.id) {
+        throw new ConflictError('Event name already exists');
+    }
+}
+
 async function insertEventData({
     name,
     startDate,
@@ -32,17 +45,11 @@ async function insertEventData({
     description,
     link,
 }: EventInsertData, userId: number) {
-    const searchEvent = await eventRepository.findEventByName(name);
+    await searchEventNameAlreadyExists(name, null);
 
-    if (searchEvent) {
-        throw new ConflictError('Event name already exists');
-    }
+    await verifyDateTime(startDate, endDate, startTime, endTime);
 
-    await verifyInvalidDate(startDate, endDate);
-    await verifyInvalidTime(startDate, endDate, startTime, endTime);
-
-    const cleanedName = DOMPurify.sanitize(name);
-    const cleanedDescription = DOMPurify.sanitize(description);
+    const { cleanedName, cleanedDescription } = await cleaningBody(name, description);
 
     const event = await eventRepository.create({
         name: cleanedName,
@@ -58,8 +65,60 @@ async function insertEventData({
     return event;
 }
 
+async function verifyAuthorization(userId: number, eventId: number) {
+    const isAuthorized = await userRepository.findUserEventByEventId(userId, eventId);
+
+    if (!isAuthorized) {
+        throw new UnauthorizedError('');
+    }
+}
+
+async function searchEventById(eventId: number) {
+    const eventRegistered = await eventRepository.findEventById(eventId);
+
+    if (!eventRegistered) {
+        throw new NotFoundError('');
+    }
+
+    return eventRegistered;
+}
+
+async function updateEventData(updateObject: EventInsertData, userId: number, eventId: number) {
+    await verifyAuthorization(userId, eventId);
+
+    const eventRegistered = await searchEventById(eventId);
+
+    await searchEventNameAlreadyExists(updateObject?.name, eventId);
+
+    await verifyDateTime(
+        updateObject.startDate || eventRegistered.startDate,
+        updateObject.endDate || eventRegistered.endDate,
+        updateObject.startTime || eventRegistered.startTime,
+        updateObject.endTime || eventRegistered.endTime,
+    );
+
+    const { cleanedName, cleanedDescription } = await cleaningBody(
+        updateObject?.name || eventRegistered.name,
+        updateObject?.description || eventRegistered.description,
+    );
+
+    const event = await eventRepository.update({
+        name: cleanedName,
+        startDate: updateObject.startDate || eventRegistered.startDate,
+        endDate: updateObject.endDate || eventRegistered.endDate,
+        startTime: updateObject.startTime || eventRegistered.startTime,
+        endTime: updateObject.endTime || eventRegistered.endTime,
+        coverPhoto: updateObject.coverPhoto || eventRegistered.coverPhoto,
+        description: cleanedDescription,
+        link: updateObject.link || eventRegistered.link,
+    }, eventId);
+
+    return event;
+}
+
 export {
     findEvents,
     findEventDescription,
     insertEventData,
+    updateEventData,
 };

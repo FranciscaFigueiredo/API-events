@@ -1,9 +1,30 @@
 import { Event } from '@prisma/client';
 import { prisma } from '../config/database';
-import { EventInsertData } from '../interfaces/Event';
+import { EventInsertData, EventUpdateData } from '../interfaces/Event';
 
-async function findEvents(): Promise<Event[]> {
-    const events = await prisma.event.findMany();
+async function findEvents(time: string): Promise<Event[]> {
+    let events = time !== 'past' && time !== 'future'
+        ? await prisma.event.findMany({}) : [];
+
+    if (time === 'past') {
+        events = await prisma.event.findMany({
+            where: {
+                endDate: {
+                    lt: new Date(),
+                },
+            },
+        });
+    }
+
+    if (time === 'future') {
+        events = await prisma.event.findMany({
+            where: {
+                endDate: {
+                    gt: new Date(),
+                },
+            },
+        });
+    }
 
     return events;
 }
@@ -24,11 +45,19 @@ async function findEventByName(name: string): Promise<Event> {
     return event;
 }
 
+async function findEventById(id: number): Promise<Event> {
+    const event = await prisma.event.findFirst({
+        where: { id },
+    });
+
+    return event;
+}
+
 async function create(
     eventDataInsertObject: EventInsertData,
     userId: number,
 ) {
-    const eventCreated = await prisma.event.create({
+    const createdEvent = await prisma.event.create({
         data: {
             ...eventDataInsertObject,
             User: {
@@ -42,12 +71,23 @@ async function create(
         },
     });
 
-    return eventCreated;
+    return createdEvent;
+}
+
+async function update(eventDataUpdateObject: EventUpdateData, id: number) {
+    const updatedEvent = await prisma.event.update({
+        where: { id },
+        data: eventDataUpdateObject,
+    });
+
+    return updatedEvent;
 }
 
 export {
     findEvents,
     findEventDescription,
     findEventByName,
+    findEventById,
     create,
+    update,
 };

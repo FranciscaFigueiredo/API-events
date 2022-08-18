@@ -6,7 +6,7 @@ async function uploadFile(req: Request, res: Response) {
 
     const uploadedUrl = await imageFileService.uploadFile(file);
 
-    return res.status(201).send(uploadedUrl);
+    return res.status(200).send(uploadedUrl);
 }
 
 export {

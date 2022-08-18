@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import DOMPurify from 'isomorphic-dompurify';
 import ForbiddenError from '../errors/ForbiddenError';
 
 async function verifyInvalidDate(startDate: Date, endDate: Date) {
@@ -37,7 +38,30 @@ async function verifyInvalidTime(
     }
 }
 
+async function verifyDateTime(
+    startDate: Date,
+    endDate: Date,
+    startTime: string,
+    endTime: string,
+) {
+    await verifyInvalidDate(startDate, endDate);
+    await verifyInvalidTime(startDate, endDate, startTime, endTime);
+}
+
+async function cleaningBody(
+    name: string,
+    description: string,
+) {
+    const cleanedName = DOMPurify.sanitize(name);
+    const cleanedDescription = DOMPurify.sanitize(description);
+
+    return {
+        cleanedName,
+        cleanedDescription,
+    };
+}
+
 export {
-    verifyInvalidDate,
-    verifyInvalidTime,
+    verifyDateTime,
+    cleaningBody,
 };
